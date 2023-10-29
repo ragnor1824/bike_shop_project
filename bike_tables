@@ -1,0 +1,101 @@
+--Create all tables
+
+CREATE TABLE "brands" (
+    "brand_id" int   NOT NULL,
+    "brand_name" varchar   NOT NULL,
+    CONSTRAINT "pk_brands" PRIMARY KEY (
+        "brand_id"
+     )
+);
+
+CREATE TABLE "categories" (
+    "category_id" int   NOT NULL,
+    "category_name" varchar   NOT NULL,
+    CONSTRAINT "pk_categories" PRIMARY KEY (
+        "category_id"
+     )
+);
+
+CREATE TABLE "customers" (
+    "customer_id" int   NOT NULL,
+    "first_name" varchar   NOT NULL,
+    "last_name" varchar   NOT NULL,
+    "phone" varchar   NOT NULL,
+    "email" varchar   NOT NULL,
+    "street" varchar   NOT NULL,
+    "city" varchar   NOT NULL,
+    "state" varchar   NOT NULL,
+    "zip_code" int   NOT NULL,
+    CONSTRAINT "pk_customers" PRIMARY KEY (
+        "customer_id"
+     )
+);
+
+CREATE TABLE "order_items" (
+    "order_id" int   NOT NULL,
+    "item_id" int   NOT NULL,
+    "product_id" int   NOT NULL,
+    "quantity" int   NOT NULL,
+    "list_price" dec   NOT NULL,
+    "discount" dec   NOT NULL
+);
+
+CREATE TABLE "orders" (
+    "order_id" int   NOT NULL,
+    "customer_id" int   NOT NULL,
+    "order_status" int   NOT NULL,
+    "order_date" date NOT NULL,
+    "required_date" date NOT NULL,
+    "shipped_date" varchar NOT NULL,
+    "store_id" int   NOT NULL,
+    "staff_id" int   NOT NULL,
+    CONSTRAINT "pk_orders" PRIMARY KEY (
+        "order_id"
+     )
+);
+
+CREATE TABLE "products" (
+    "product_id" int   NOT NULL,
+    "product_name" varchar   NOT NULL,
+    "brand_id" int   NOT NULL,
+    "category_id" int   NOT NULL,
+    "model_year" int   NOT NULL,
+    "list_price" dec   NOT NULL,
+    CONSTRAINT "pk_products" PRIMARY KEY (
+        "product_id"
+     )
+);
+
+CREATE TABLE "staffs" (
+    "staff_id" int   NOT NULL,
+    "first_name" varchar   NOT NULL,
+    "last_name" varchar   NOT NULL,
+    "email" varchar   NOT NULL,
+    "phone" varchar   NOT NULL,
+    "active" int   NOT NULL,
+    "store_id" int   NOT NULL,
+    "manager_id" varchar  NOT NULL,
+    CONSTRAINT "pk_staffs" PRIMARY KEY (
+        "staff_id"
+     )
+);
+
+CREATE TABLE "stocks" (
+    "store_id" int   NOT NULL,
+    "product_id" int   NOT NULL,
+    "quantity" int   NOT NULL
+);
+
+CREATE TABLE "stores" (
+    "store_id" int   NOT NULL,
+    "store_name" varchar   NOT NULL,
+    "phone" varchar   NOT NULL,
+    "email" varchar   NOT NULL,
+    "street" varchar   NOT NULL,
+    "city" varchar   NOT NULL,
+    "state" varchar   NOT NULL,
+    "zip_code" int   NOT NULL,
+    CONSTRAINT "pk_stores" PRIMARY KEY (
+        "store_id"
+     )
+);
