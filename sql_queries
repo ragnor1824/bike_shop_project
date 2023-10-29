@@ -1,0 +1,66 @@
+-- Define a new CTE table and join the orders and order_items table through the order_id 
+with cte as (
+select
+	o.order_date,
+	oi.list_price,
+	o.store_id
+from orders o
+inner join order_items oi on o.order_id = oi.order_id
+)
+
+-- Calculate and summarive sales data by month by total stores and then by store
+select
+date_part('month', order_date) as month,
+sum(list_price) as total_sales,
+sum(case when store_id = 1 then list_price else 0 end) as store_1_sales,
+sum(case when store_id = 2 then list_price else 0 end) as store_2_sales,
+sum(case when store_id = 3 then list_price else 0 end) as store_3_sales
+from cte
+group by date_part('month', order_date)
+order by month
+
+-- Calculate and summarize total sales data by quarter
+select
+date_part('year', order_date) as year,
+	case
+		when extract(month from order_date) between 1 and 3 then 'Q1'
+		when extract(month from order_date) between 4 and 6 then 'Q2'
+		when extract(month from order_date) between 7 and 9 then 'Q3'
+		when extract(month from order_date) between 10 and 12 then 'Q4'
+	end as quarter,
+	sum(list_price) as total_sales
+from cte
+group by year, quarter
+order by year, quarter;
+
+-- Find sales by zip code
+select
+c.zip_code,
+sum(list_price)
+from orders o
+inner join customers c on o.customer_id = c.customer_id
+inner join order_items oi on o.order_id = oi.order_id
+group by c.zip_code
+
+-- Find the number of times the brand name was ordered
+select
+b.brand_name,
+count(o.order_id) as count,
+round((count(o.order_id) * 100.0) / (select count(*) from orders),2) as percentage
+from orders o
+inner join order_items oi on o.order_id = oi.order_id
+inner join products p on oi.product_id = p.product_id
+inner join brands b on p.brand_id = b.brand_id
+group by b.brand_name
+
+-- Top items in 2016/2017/2018
+select 
+p.product_name,
+count(p.product_name) as product_count
+from orders o
+inner join order_items oi on o.order_id = oi.order_id
+inner join products p on oi.product_id = p.product_id
+where date_part('year', o.order_date) = 2018
+group by p.product_name
+order by count(p.product_name) desc
+limit 5
